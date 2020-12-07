@@ -13,12 +13,9 @@ class BooksApp extends React.Component {
     showSearchPage: false,
   };
 
-  componentDidMount() {
-    BooksAPI.getAll().then((books) => {
-      this.setState(() => ({
-        books,
-      }));
-    });
+  async componentDidMount() {
+    const books = await BooksAPI.getAll();
+    this.setState({ books });
   }
 
   /**
@@ -54,11 +51,23 @@ class BooksApp extends React.Component {
   bookSearch = (query) => {
     if (!query) query = " ";
 
-    BooksAPI.search(query).then((searchedBooks) => {
-      !searchedBooks.error
-        ? this.setState(() => ({ searchedBooks }))
-        : this.setState(() => ({ searchedBooks: [] }));
+    BooksAPI.search(query).then((books) => {
+      this.setState({
+        searchedBooks: books.error
+          ? []
+          : books.filter((book) => book.imageLinks !== undefined),
+      });
     });
+
+    // BooksAPI.search(query).then((searchedBooks) => {
+    //   !searchedBooks.error
+    //     ? this.setState(() => ({
+    //         searchedBooks: searchedBooks.filter(
+    //           (book) => book.imageLinks !== undefined
+    //         ),
+    //       }))
+    //     : this.setState(() => ({ searchedBooks: [] }));
+    // });
   };
 
   /**
@@ -70,22 +79,23 @@ class BooksApp extends React.Component {
     if (shelf === "none") return;
     BooksAPI.update(book, shelf).then(() => {
       BooksAPI.getAll().then((books) => {
-        this.setState(() => ({ books, searchedBooks: [] }));
+        this.setState({ books, searchedBooks: [] });
       });
     });
   };
 
   render() {
     const { books, searchedBooks } = this.state;
+
+    console.log("search", searchedBooks);
+
     return (
       <div className='app'>
-        {console.log(this.state.books)}
         <Route
           path='/search'
           render={({ history }) => (
             <BookSearch
-              books={books}
-              searchedBooks={searchedBooks}
+              books={searchedBooks}
               onBookSearch={this.bookSearch}
               onAddBook={(book, shelf) => {
                 this.addBook(book, shelf);

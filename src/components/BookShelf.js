@@ -23,7 +23,7 @@ const BookShelf = ({ shelf, books, title, onBookTransaction }) => {
 };
 
 BookShelf.propTypes = {
-  shelf: PropTypes.string.isRequired,
+  shelf: PropTypes.string,
   books: PropTypes.array.isRequired,
   title: PropTypes.string.isRequired,
   onBookTransaction: PropTypes.func.isRequired,

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import BookShelf from "./BookShelf";
 
-const BookSearch = ({ searchedBooks, onBookSearch, onAddBook }) => {
+const BookSearch = ({ books, onBookSearch, onAddBook }) => {
   return (
     <div className='search-books'>
       <div className='search-books-bar'>
@@ -22,19 +22,18 @@ const BookSearch = ({ searchedBooks, onBookSearch, onAddBook }) => {
       <div className='search-books-results'>
         <BookShelf
           title=''
-          books={searchedBooks}
+          books={books}
           onBookTransaction={(book, shelf) => {
             onAddBook(book, shelf);
           }}
-          transactionState={true}
         />
       </div>
     </div>
   );
 };
 
-BookShelf.propTypes = {
-  searchedBooks: PropTypes.array.isRequired,
+BookSearch.propTypes = {
+  books: PropTypes.array.isRequired,
   onBookSearch: PropTypes.func.isRequired,
   onAddBook: PropTypes.func.isRequired,
 };

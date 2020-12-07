@@ -49,4 +49,4 @@ BookCard.propTypes = {
   onBookTransaction: PropTypes.func.isRequired,
 };
 
-export default BookCard;
+export default React.memo(BookCard);
