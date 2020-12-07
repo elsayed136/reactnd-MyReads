@@ -10,7 +10,6 @@ class BooksApp extends React.Component {
   state = {
     books: [],
     searchedBooks: [],
-    showSearchPage: false,
   };
 
   async componentDidMount() {
@@ -55,19 +54,37 @@ class BooksApp extends React.Component {
       this.setState({
         searchedBooks: books.error
           ? []
-          : books.filter((book) => book.imageLinks !== undefined),
+          : books.filter(
+              (book) =>
+                book.imageLinks !== undefined || book.authors !== undefined
+            ),
       });
     });
+  };
 
-    // BooksAPI.search(query).then((searchedBooks) => {
-    //   !searchedBooks.error
-    //     ? this.setState(() => ({
-    //         searchedBooks: searchedBooks.filter(
-    //           (book) => book.imageLinks !== undefined
-    //         ),
-    //       }))
-    //     : this.setState(() => ({ searchedBooks: [] }));
-    // });
+  bookSearch2 = (query) => {
+    if (!query) query = " ";
+
+    BooksAPI.search(query).then((newBooks) => {
+      this.setState(({ books }) => {
+        let searchedBooks = newBooks.error
+          ? []
+          : newBooks.filter(
+              (book) =>
+                book.imageLinks !== undefined && book.authors !== undefined
+            );
+
+        searchedBooks.forEach((searchedBook) => {
+          books.forEach((MyBook) => {
+            if (searchedBook.id === MyBook.id) {
+              searchedBook.shelf = MyBook.shelf;
+            }
+          });
+        });
+
+        return { searchedBooks };
+      });
+    });
   };
 
   /**
@@ -86,9 +103,6 @@ class BooksApp extends React.Component {
 
   render() {
     const { books, searchedBooks } = this.state;
-
-    console.log("search", searchedBooks);
-
     return (
       <div className='app'>
         <Route
@@ -96,11 +110,15 @@ class BooksApp extends React.Component {
           render={({ history }) => (
             <BookSearch
               books={searchedBooks}
-              onBookSearch={this.bookSearch}
+              onBookSearch={this.bookSearch2}
               onAddBook={(book, shelf) => {
                 this.addBook(book, shelf);
                 history.push("/");
               }}
+              booksIds={books.map((i) => ({
+                id: i.id,
+                shelf: i.shelf,
+              }))}
             />
           )}
         />

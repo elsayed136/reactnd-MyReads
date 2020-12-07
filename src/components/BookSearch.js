@@ -21,6 +21,7 @@ const BookSearch = ({ books, onBookSearch, onAddBook }) => {
       </div>
       <div className='search-books-results'>
         <BookShelf
+          shelf='search'
           title=''
           books={books}
           onBookTransaction={(book, shelf) => {

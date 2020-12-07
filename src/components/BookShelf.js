@@ -10,7 +10,7 @@ const BookShelf = ({ shelf, books, title, onBookTransaction }) => {
       <div className='bookshelf-books'>
         <ol className='books-grid'>
           {books.map((book) => {
-            return book.shelf === shelf ? (
+            return book.shelf === shelf || shelf === "search" ? (
               <li key={book.id}>
                 <BookCard onBookTransaction={onBookTransaction} book={book} />
               </li>
