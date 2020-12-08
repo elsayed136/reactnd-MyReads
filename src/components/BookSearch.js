@@ -16,6 +16,7 @@ const BookSearch = ({ books, onBookSearch, onAddBook }) => {
             type='text'
             placeholder='Search by title or author'
             onChange={(e) => onBookSearch(e.target.value.trim())}
+            autoFocus
           />
         </div>
       </div>
